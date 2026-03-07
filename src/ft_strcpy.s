@@ -7,7 +7,7 @@ ft_strcpy:
 			xor rcx, rcx
 			loop: cmp byte [rsi + rcx], 0
 			je done
-			mov r10, [rsi + rcx]
+			movzx r10, byte [rsi + rcx]
 			mov [rdi + rcx], r10
 			inc rcx
 			jmp loop
