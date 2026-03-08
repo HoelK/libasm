@@ -81,11 +81,24 @@ void	strcmp_tests()
 	for (int i = 0; srcs[i][0]; i++) { STRCMP_RESULT(srcs[i][0], srcs[i][1]); }
 }
 
+void	write_tests()
+{
+	const char *srcs[] = {
+		"",
+		"test\n",
+		"caca\n",
+		NULL
+	};
+
+	for (int i = 0; srcs[i]; i++) { ft_write(2, srcs[i], strlen(srcs[i])); }
+}
+
 int	main(void)
 {
 	strlen_tests();
 	strcpy_tests();
 	strcmp_tests();
+	write_tests();
 
 	return (EXIT_SUCCESS);
 }
