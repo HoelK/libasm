@@ -1,6 +1,10 @@
+# define _GNU_SOURCE
 # include <stdio.h>
+# include <errno.h>
+# include <fcntl.h>
 # include <string.h>
 # include <stdlib.h>
+# include <unistd.h>
 # include <stdbool.h>
 # include "../header/libasm.h"
 
@@ -23,12 +27,31 @@ bool	strcmp_sanitycheck(int r1, int r2) { return ((r1 < 0 && r2 >= 0) || (r1 > 0
 	fprintf(stderr, "%s\n", test);
 
 # define STRCMP_RESULT(str1, str2) \
-		fprintf(stderr, "[STRCMP]"); \
-		if (strcmp_sanitycheck(strcmp(str1, str2), ft_strcmp(str1, str2))) { fprintf(stderr, RED"[KO]"DEFAULT); } \
-		else { fprintf(stderr, GREEN"[OK]"DEFAULT); } \
-		fprintf(stderr, "%s & %s\n", str1, str2);
+	fprintf(stderr, "[STRCMP]"); \
+	if (strcmp_sanitycheck(strcmp(str1, str2), ft_strcmp(str1, str2))) { fprintf(stderr, RED"[KO]"DEFAULT); } \
+	else { fprintf(stderr, GREEN"[OK]"DEFAULT); } \
+	fprintf(stderr, "%s & %s\n", str1, str2);
 
-void	strlen_tests()
+# define STRDUP_RESULT(str) \
+	fprintf(stderr, "[STRDUP]"); \
+	if (strcmp(strdup(str), str)) { fprintf(stderr, RED"[KO]"DEFAULT); } \
+	else { fprintf(stderr, GREEN"[OK]"DEFAULT); } \
+	fprintf(stderr, "%s\n", str);
+
+# define WRITE_RESULT(fd, str) \
+	fprintf(stderr, "[WRITE]"); \
+	if (ft_write(fd, str, ft_strlen(str)) != write(fd, str, strlen(str))) { fprintf(stderr, RED"[KO]"DEFAULT); } \
+	else { fprintf(stderr, GREEN"[OK]"DEFAULT); } \
+	fprintf(stderr, "%s\n", str);
+
+# define READ_RESULT(fd, buffer, size) \
+	fprintf(stderr, "[READ]"); \
+	if (ft_read(fd, buffer, size) != read(fd, buffer, size)) { fprintf(stderr, RED"[KO]"DEFAULT); } \
+	else { fprintf(stderr, GREEN"[OK]"DEFAULT); } \
+	fprintf(stderr, "%s\n", buffer);
+	
+
+void	strlen_tests(void)
 {
 	const char *srcs[] = {
 		"",
@@ -41,7 +64,7 @@ void	strlen_tests()
 	for (int i = 0; srcs[i]; i++) { STRLEN_RESULT(srcs[i]); }
 }
 
-void	strcpy_tests()
+void	strcpy_tests(void)
 {
 	const char *srcs[] = {
 		"",
@@ -63,7 +86,7 @@ void	strcpy_tests()
 	}
 }
 
-void	strcmp_tests()
+void	strcmp_tests(void)
 {
 	const char *(srcs[][2]) = {
 		{ "", "" },
@@ -81,24 +104,63 @@ void	strcmp_tests()
 	for (int i = 0; srcs[i][0]; i++) { STRCMP_RESULT(srcs[i][0], srcs[i][1]); }
 }
 
-void	write_tests()
+void	strdup_tests(void)
 {
 	const char *srcs[] = {
 		"",
-		"test\n",
-		"caca\n",
+		"a",
+		"idle",
+		"100 size                                                                                            ",
+		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbz",
 		NULL
 	};
 
-	for (int i = 0; srcs[i]; i++) { ft_write(2, srcs[i], strlen(srcs[i])); }
+	for (int i = 0; srcs[i]; i++) { STRDUP_RESULT(srcs[i]); }
+}
+
+void	write_tests(const int fd)
+{
+	const char *srcs[] = {
+		"",
+		"a",
+		"idle",
+		"100 size                                                                                            ",
+		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbz",
+		NULL
+	};
+
+	for (int i = 0; srcs[i]; i++) { WRITE_RESULT(fd, srcs[i]); }
+}
+
+void	read_tests(const int fd)
+{
+	char buffer[200] = {0};
+	const char *srcs[] = {
+		"",
+		"a",
+		"idle",
+		"100 size                                                                                            ",
+		"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbz",
+		NULL
+	};
+	lseek(fd, 0, SEEK_SET);
+
+	for (int i = 0; srcs[i]; i++) { READ_RESULT(fd, buffer, strlen(srcs[i])); };
+
 }
 
 int	main(void)
 {
+	const int fd = open("/home/hkeromne/projects/libasm/", O_TMPFILE | O_RDWR, 0777);
+	if (errno)
+		return (fprintf(stderr, "%s\n", strerror(errno)));
+
 	strlen_tests();
 	strcpy_tests();
 	strcmp_tests();
-	write_tests();
+	strdup_tests();
+	write_tests(fd);
+	read_tests(fd);
 
 	return (EXIT_SUCCESS);
 }
