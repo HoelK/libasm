@@ -35,7 +35,7 @@ $(NAME): $(OBJS)
 %.o: %.c
 	@echo "\e[1;33m===============TESTER===============\e[1;30"
 	@echo "\e[1;32m [LIBASM] Compiling $^\e[1;30"
-	@$(CC) $(DEFAULTFLAGS) -c $^ -o $@
+	@$(CC) $(DEFAULTFLAGS) -I./header -c $^ -o $@
 
 %.o: %.s
 	@echo "\e[1;32m [LIBASM] Compiling $^\e[1;30"

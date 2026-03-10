@@ -6,7 +6,7 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include <stdbool.h>
-# include "../header/libasm.h"
+# include "libasm.h"
 
 # define DEFAULT	"\033[0m"
 # define RED		"\033[31m"
@@ -146,12 +146,11 @@ void	read_tests(const int fd)
 	lseek(fd, 0, SEEK_SET);
 
 	for (int i = 0; srcs[i]; i++) { READ_RESULT(fd, buffer, strlen(srcs[i])); };
-
 }
 
 int	main(void)
 {
-	const int fd = open("/home/hkeromne/projects/libasm/", O_TMPFILE | O_RDWR, 0777);
+	const int fd = open("./", O_TMPFILE | O_RDWR, 0777);
 	if (errno)
 		return (fprintf(stderr, "%s\n", strerror(errno)));
 
@@ -162,5 +161,6 @@ int	main(void)
 	write_tests(fd);
 	read_tests(fd);
 
+	close(fd);
 	return (EXIT_SUCCESS);
 }
