@@ -1,11 +1,13 @@
 ASM=nasm
 ASMFLAGS=-felf64 -g
-SRCS=src/ft_strlen.s \
-	 src/ft_strcpy.s \
-	 src/ft_strcmp.s \
-	 src/ft_write.s \
-	 src/ft_read.s \
-	 src/ft_strdup.s
+SRCS=src/mandatory/ft_strlen.s \
+	 src/mandatory/ft_strcpy.s \
+	 src/mandatory/ft_strcmp.s \
+	 src/mandatory/ft_write.s \
+	 src/mandatory/ft_read.s \
+	 src/mandatory/ft_strdup.s
+SRCS_BONUS=src/bonus/ft_atoi_base.s
+OBJS_BONUS=$(SRCS_BONUS:.s=.o)
 OBJS=$(SRCS:.s=.o)
 NAME=libasm.a
 
@@ -32,6 +34,11 @@ test: $(NAME) $(TESTOBJS)
 	@$(CC) $(TESTOBJS) -o $(TESTNAME) $(DEFAULTFLAGS) $(TESTFLAGS)
 	@printf "$(GREEN)[LIBASM] Build Complete !$(DEFAULT)\n"
 
+bonus: $(OBJS) $(OBJS_BONUS) test
+	@printf "$(GREEN)[LIBASM] Building library...$(DEFAULT)\n"
+	@ar rcs $(NAME) $(OBJS) $(OBJS_BONUS)
+	@printf "$(GREEN)[LIBASM] Build Complete !$(DEFAULT)\n"
+
 $(NAME): $(OBJS)
 	@printf "$(GREEN)[LIBASM] Building library...$(DEFAULT)\n"
 	@ar rcs $(NAME) $(OBJS)
@@ -48,7 +55,7 @@ $(NAME): $(OBJS)
 
 clean:
 	@printf "$(RED)[DELETING RESIDUAL FILES]$(DEFAULT)\n"
-	@rm -f $(OBJS) $(TESTOBJS)
+	@rm -f $(OBJS) $(TESTOBJS) $(OBJS_BONUS)
 
 fclean: clean
 	@printf "$(RED)[DELETING EXECUTABLES]$(DEFAULT)\n"
