@@ -4,11 +4,11 @@ section .text
 global ft_strlen
 
 ft_strlen:
-			xor rcx, rcx
+			XOR rcx, rcx
 			loop: cmp byte [rdi + rcx], 0
-			je done
-			inc rcx
-			jmp loop
+			JE done
+			INC rcx
+			JMP loop
 			done:
-			mov rax, rcx
-			ret
+			MOV rax, rcx
+			RET
