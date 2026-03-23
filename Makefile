@@ -1,5 +1,5 @@
 ASM=nasm
-ASMFLAGS=-f elf64 -g
+ASMFLAGS=-felf64 -g
 SRCS=src/ft_strlen.s \
 	 src/ft_strcpy.s \
 	 src/ft_strcmp.s \
@@ -10,7 +10,7 @@ OBJS=$(SRCS:.s=.o)
 NAME=libasm.a
 
 CC=cc
-TESTFLAGS=-fsanitize=address -L. -lasm
+TESTFLAGS=-fuse-ld=lld -pie -fsanitize=address -L. -lasm
 TESTSRCS=tests/test.c
 TESTOBJS=$(TESTSRCS:.c=.o)
 TESTNAME=test
@@ -18,35 +18,40 @@ TESTNAME=test
 DEFAULTFLAGS=-Wall -Werror -Wextra -g
 
 all: start $(NAME) test
-	
+
+YELLOW=\e[1;33m
+GREEN=\e[1;32m
+RED=\e[1;31m
+DEFAULT=\033[0m
+
 start:
-	@echo "\e[1;33m===============LIBASM===============\e[1;30"
+	@printf "$(YELLOW)==============LIBASM===============$(DEFAULT)\n"
 
 test: $(NAME) $(TESTOBJS)
-	@echo "\e[1;32m [LIBASM] Building test...\e[1;30"
+	@printf "$(GREEN)[LIBASM] Building test...$(DEFAULT)\n"
 	@$(CC) $(TESTOBJS) -o $(TESTNAME) $(DEFAULTFLAGS) $(TESTFLAGS)
-	@echo "\e[1;32m [LIBASM] Build Complete !\e[1;30"
+	@printf "$(GREEN)[LIBASM] Build Complete !$(DEFAULT)\n"
 
 $(NAME): $(OBJS)
-	@echo "\e[1;32m [LIBASM] Building library...\e[1;30"
+	@printf "$(GREEN)[LIBASM] Building library...$(DEFAULT)\n"
 	@ar rcs $(NAME) $(OBJS)
-	@echo "\e[1;32m [LIBASM] Build Complete !\e[1;30"
+	@printf "$(GREEN)[LIBASM] Build Complete !$(DEFAULT)\n"
 
 %.o: %.c
-	@echo "\e[1;33m===============TESTER===============\e[1;30"
-	@echo "\e[1;32m [LIBASM] Compiling $^\e[1;30"
+	@printf "\e[1;33m===============TESTER===============$(DEFAULT)\n"
+	@printf "$(GREEN)[LIBASM] Compiling $^$(DEFAULT)\n"
 	@$(CC) $(DEFAULTFLAGS) -I./header -c $^ -o $@
 
 %.o: %.s
-	@echo "\e[1;32m [LIBASM] Compiling $^\e[1;30"
+	@printf "$(GREEN)[LIBASM] Compiling $^$(DEFAULT)\n"
 	@$(ASM) $(ASMFLAGS) $^ -o $@
 
 clean:
-	@echo "\e[31m [DELETING RESIDUAL FILES]\e[1;30"
+	@printf "$(RED)[DELETING RESIDUAL FILES]$(DEFAULT)\n"
 	@rm -f $(OBJS) $(TESTOBJS)
 
 fclean: clean
-	@echo "\e[31m [DELETING EXECUTABLES]\e[1;30"
+	@printf "$(RED)[DELETING EXECUTABLES]$(DEFAULT)\n"
 	@rm -f $(NAME) $(TESTNAME)
 
 re: fclean all
