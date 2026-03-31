@@ -3,23 +3,29 @@ BITS 64
 section .text
 global ft_isset
 
+%define true 1
+%define false 0
+
+%define i rcx
+%define c rdi
+%define set rsi
+
 ft_isset:
-			XOR rcx, rcx
+			XOR i, i
 
 loop_set:
-			MOV al, byte [rsi + rcx]
-			CMP al, byte [rdi]
+			MOV al, byte [set + i]
+			CMP al, dil
 			JE ret_true
 			CMP al, 0
-			JMP ret_false
-			INC rcx
+			JE ret_false
+			INC i
 			JMP loop_set
 
 ret_true:
-			MOV rax, 1
+			MOV rax, true
 			RET
 
 ret_false:
-			MOV rax, 0
+			MOV rax, false
 			RET
-
