@@ -11,7 +11,7 @@ ft_write:
 			JL set_errno
 
 ret:
-			ret
+			RET
 
 set_errno:
 			MOV r8, rax
