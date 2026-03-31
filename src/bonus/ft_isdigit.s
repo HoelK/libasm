@@ -3,18 +3,17 @@ BITS 64
 section .text
 global ft_isdigit
 
-ft_isdigit:
-			MOV al, byte [rdi]
-			CMP al, '0'
-			JL ret_false
-			CMP al, '9'
-			JG ret_false
+%define true 1
+%define false 0
 
-ret_true:
-			MOV rax, 1
+ft_isdigit:
+			MOV rax, true
+			CMP dil, '0'
+			JL ret_false
+			CMP dil, '9'
+			JG ret_false
 			RET
 
 ret_false:
-			MOV rax, 0
+			MOV rax, false
 			RET
-

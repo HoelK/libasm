@@ -3,21 +3,23 @@ BITS 64
 section .text
 global ft_isspace
 
+%define true 1
+%define false 0
+
 ft_isspace:
-			MOV al, byte [rdi]
-			CMP al, 9
+			CMP dil, 9
 			JL ret_false
-			CMP al, 13
+			CMP dil, 13
 			JL ret_true
-			CMP al, ' '
+			CMP dil, ' '
 			JL ret_false
-			CMP al, ' '
+			CMP dil, ' '
 			JG ret_false
 
 ret_true:
-			MOV rax, 1
+			MOV rax, true
 			RET
 			
 ret_false:
-			MOV rax, 0
+			MOV rax, false
 			RET

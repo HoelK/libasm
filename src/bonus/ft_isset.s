@@ -13,6 +13,7 @@ ft_isset:
 			XOR i, i
 
 loop_set:
+			XOR rax, rax
 			MOV al, byte [set + i]
 			CMP al, dil
 			JE ret_true
