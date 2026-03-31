@@ -7,7 +7,6 @@ global ft_isset
 %define false 0
 
 %define i rcx
-%define c rdi
 %define set rsi
 
 ft_isset:
