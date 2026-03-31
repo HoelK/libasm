@@ -5,7 +5,12 @@ SRCS=src/mandatory/ft_strlen.s \
 	 src/mandatory/ft_strcmp.s \
 	 src/mandatory/ft_write.s \
 	 src/mandatory/ft_read.s \
-	 src/mandatory/ft_strdup.s
+	 src/mandatory/ft_strdup.s \
+	 src/bonus/ft_atoi_base.s \
+	 src/bonus/ft_isspace.s \
+	 src/bonus/ft_isdigit.s \
+	 src/bonus/ft_isdouble.s \
+	 src/bonus/ft_isset.s
 SRCS_BONUS=src/bonus/ft_atoi_base.s
 OBJS_BONUS=$(SRCS_BONUS:.s=.o)
 OBJS=$(SRCS:.s=.o)
